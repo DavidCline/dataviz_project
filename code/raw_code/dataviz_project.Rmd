@@ -90,12 +90,12 @@ pets$ym <- as.yearmon(pets$date, "%y%m")
 ## how the number of licenses recorded has changed over time
 pets %>%
   ## group by yearmonth (`ym`)
-  function_name(VARIABLE) %>% 
+  group_by(ym) %>% 
   ## count number within each group
-  function_name(n=n()) %>%
-  ggplot(., aes(VARIABLE, n)) + 
+  count(n=n()) %>%
+  ggplot(., aes(ym, n)) + 
   ## geom name for line chart
-  geom_GEOM() +
+  geom_line() +
   scale_x_yearmon() + 
   xlab("") + 
   ylab("Number of licenses")
@@ -103,7 +103,16 @@ pets %>%
 
 ```{r pet-plot, warning=FALSE} 
 ### Explore the data -- create your own plot!
-
+## Let's examine the 2016 spike in licenses for dogs and cats separately
+pets %>% 
+  group_by(species, ym) %>% 
+  filter(grepl("2016", ym)) %>% 
+  count(n=n()) %>% 
+  ggplot(., aes(ym, n, color = species)) +
+  geom_line() +
+  scale_x_yearmon() +
+  xlab("") +
+  ylab("Number of licenses")
 ```
 
 # Part 2: Explanatory Data Analysis
